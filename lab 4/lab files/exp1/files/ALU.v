@@ -1,6 +1,4 @@
 `timescale 1ns / 1ps
-
-
 module ALU#(n = 32)(
     input [n-1:0] a,
     input [n-1:0] b,
