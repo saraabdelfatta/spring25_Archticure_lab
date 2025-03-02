@@ -1,0 +1,62 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 02/25/2025 11:07:01 AM
+// Design Name: 
+// Module Name: tb
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module tb();
+localparam n =32;
+reg [n-1:0] a;
+reg [n-1:0]b;
+reg [3:0]sel;
+wire zero; 
+wire [n-1:0]ALU_out;
+
+ALU#(.n(n)) test(a,b,sel,zero,ALU_out);
+
+initial begin
+
+a = 60;
+b = 40;
+sel = 4'b0010;   
+#100
+
+a = 60;
+b = 40;
+sel = 4'b0110;   
+#100
+
+a = 5'b11001;
+b = 5'b11101;
+sel = 4'b0000;   
+#100
+
+a = 5'b11001;
+b = 5'b11101;
+sel = 4'b0001; 
+
+#100
+
+a = 5'b11001;
+b = 5'b11101;
+sel = 4'b1111; 
+  
+end
+
+endmodule
