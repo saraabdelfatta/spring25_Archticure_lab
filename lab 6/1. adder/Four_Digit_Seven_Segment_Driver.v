@@ -3,19 +3,31 @@
 
 
 module Four_Digit_Seven_Segment_Driver (
+  // Clock input for synchronization.
 input clk,
+  //13-bit number to display (max value = 8191).
 input [12:0] num,
+  //Controls which digit is active (active-low, since 0 turns on a digit).
 output reg [3:0] Anode,
+  //7-bit output (each bit controls a segment, typically active-low).
 output reg [6:0] LED_out
 );
+  //Stores the current digit (0-9) being displayed.
 reg [3:0] LED_BCD;
+  
+  //0-bit counter (slowly increments to control refresh rate).
 reg [19:0] refresh_counter = 0; // 20-bit counter
+  
+  //2-bit selector (cycles through 0 to 3 to pick a digit).
 wire [1:0] LED_activating_counter;
+
+  //Refresh Counter Increment (Sequential Logic)
+  //Purpose: Creates a slow counter to control digit switching.
 always @(posedge clk)
 begin
 refresh_counter <= refresh_counter + 1;
 end
-assign LED_activating_counter = refresh_counter[19:18];
+  assign LED_activating_counter = refresh_counter[19:18]; //// Use top 2 bits for digit selection
 always @(*)
 begin
 case(LED_activating_counter)
