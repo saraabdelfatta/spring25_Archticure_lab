@@ -1,23 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 10/22/2024 01:32:02 PM
-// Design Name: 
-// Module Name: CoffeMachine
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 
 module CoffeMachine(input clk,reset,en, output[3:0] ledState, output reg [3:0]  Anode, output reg [6:0] ssd_out);
@@ -25,18 +6,39 @@ wire dividedclk;
 clockDivider #(50000000)div(clk,reset,en, dividedclk); 
 reg [1:0] current_state;
 reg [1:0] next_state;
+
+    //becouse I have 4 states so I have 4 parameters
+    //we assign for each states a number as we map for each state a number
+    //in other words, brew -->0, steam-->1, wait-->2, and clean -->3
+    //this how verlog understand it, therfore, if we have more parametwers we tend to add more bits
 parameter [1:0] Brew = 2'b00;
 parameter [1:0] Steam = 2'b01;
 parameter [1:0] Wait = 2'b10;
 parameter [1:0] Clean = 2'b11;
-reg [3:0] counter=0;
-reg [3:0] LED_BCD;
+
+
+      reg [3:0] counter=0;
+    
+        //FBGA
+    reg [3:0] LED_BCD;
+    
 //reg [21:0] refresh_counter2 = 0; // 20-bit counter
-
+    
 reg [19:0] refresh_counter = 0; // 20-bit counter
+    
 //assign dividedclk=refresh_counter2[20];
-
 wire [1:0] LED_activating_counter;
+
+        //counter 
+    //is going to increament at every postive edge of the clock of the clock divider
+    //this mean that it will increament every second and that what we want
+    //counter is 4 becouse we have 4 statues 
+    //it used to move from one state to another
+    //whenever the enable = 1------>count
+    //it will rest under two condtioned 
+    //1. if I reached to my desired number 
+    //2. rest the hole module with ashenchrouns
+    //if the enable is not ON then the counter is freze
 always @(posedge dividedclk or posedge reset)
     begin
         if(reset==1'b1 || current_state != next_state)
@@ -47,6 +49,11 @@ always @(posedge dividedclk or posedge reset)
         counter <= counter;
         
     end
+
+    //when we have a k steatment 
+//when we have case on the current state, and we define the transtion between the states 
+    //define the tranxition
+
 always @(*) begin
         case (current_state)
             Brew: begin
@@ -76,6 +83,8 @@ always @(*) begin
             default: current_state <= Brew;
         endcase
 end
+
+    
 always @(posedge dividedclk or posedge reset)
     begin
     if(reset==1'b1) 
@@ -83,9 +92,10 @@ always @(posedge dividedclk or posedge reset)
     else
     current_state <= next_state;
     end
-//   always @(posedge clk) begin
-//        refresh_counter2 <= refresh_counter2 + 1;
-//    end
+
+
+
+    
 
     always @(posedge clk) begin
         refresh_counter <= refresh_counter + 1;
