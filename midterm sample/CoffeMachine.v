@@ -1,33 +1,45 @@
 `timescale 1ns / 1ps
 
-
+//clk is the clock
+//rest is the rest theta return everthing to its orginal value
+//en is the enable for the clockdivider
+//ledsate is to stor the final answer
+//anode and ssd_out are for the FBGA
 module CoffeMachine(input clk,reset,en, output[3:0] ledState, output reg [3:0]  Anode, output reg [6:0] ssd_out);
+    //important wire for the clock divider
 wire dividedclk;
+
+    //first:: intillize the clock divider 
 clockDivider #(50000000)div(clk,reset,en, dividedclk); 
+
+    //the current_state that the the pointer refare to 
 reg [1:0] current_state;
+
+    // the next step the pointer should going to 
 reg [1:0] next_state;
 
     //becouse I have 4 states so I have 4 parameters
     //we assign for each states a number as we map for each state a number
     //in other words, brew -->0, steam-->1, wait-->2, and clean -->3
     //this how verlog understand it, therfore, if we have more parametwers we tend to add more bits
-parameter [1:0] Brew = 2'b00;
-parameter [1:0] Steam = 2'b01;
-parameter [1:0] Wait = 2'b10;
-parameter [1:0] Clean = 2'b11;
+    //a coffee machine which has 4 states, brew (5 secs), steam (3 secs), wait (10 secs) and clean (4 secs)
+    parameter [1:0] Brew = 2'b00; //5 sec
+    parameter [1:0] Steam = 2'b01; //3sec
+    parameter [1:0] Wait = 2'b10; //10sec
+    parameter [1:0] Clean = 2'b11; //4sec
 
-
+      //refare to the input and it is for FSM and its 4 bit becouse we have 4 parameter 
       reg [3:0] counter=0;
     
         //FBGA
-    reg [3:0] LED_BCD;
+       reg [3:0] LED_BCD;
     
 //reg [21:0] refresh_counter2 = 0; // 20-bit counter
     
-reg [19:0] refresh_counter = 0; // 20-bit counter
+    reg [19:0] refresh_counter = 0; // 20-bit counter 
     
 //assign dividedclk=refresh_counter2[20];
-wire [1:0] LED_activating_counter;
+    wire [1:0] LED_activating_counter; 
 
         //counter 
     //is going to increament at every postive edge of the clock of the clock divider
@@ -56,30 +68,35 @@ always @(posedge dividedclk or posedge reset)
 
 always @(*) begin
         case (current_state)
+            
             Brew: begin
             if(counter== 4'd5)
             next_state <= Steam;
             else
             next_state <=Brew;
             end
+            
             Steam: begin
             if(counter==3'd3)
             next_state <=Wait;
             else
             next_state <=Steam;
             end
+            
             Wait: begin
             if(counter==4'd10)
             next_state <=Clean;
             else
             next_state <=Wait;
             end
+            
             Clean: begin
             if(counter==3'd4)
             next_state <=Brew;
             else
             next_state <=Clean;
             end
+            
             default: current_state <= Brew;
         endcase
 end
