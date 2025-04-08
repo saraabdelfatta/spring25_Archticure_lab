@@ -4,7 +4,7 @@
 module clockDivider #(parameter n=5000000)(
     input clk,  //clk
     input rst, //rest
-    input en, //enable
+    input en, //enable (counter increament on each postive clock edge)
     output reg out_clk  //(divided clock, declared as a register)
     );
 
