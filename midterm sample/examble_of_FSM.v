@@ -31,10 +31,12 @@ module fsm(input clk, rst, w, output z);
       default: nextState = A;
       endcase 
 // Update state FF’s with the triggering edge of the clock 
-always @ (posedge clk or posedge rst) begin 
-if(rst) 
-state <= A; 
-state <= nextState; 
+  always @ (posedge clk or posedge rst) begin  
+  if(rst)  
+    state <= A;   
+    else 
+      state <= nextState; 
+  end
 // output generation (combinational logic) 
 assign z = (state == C); 
 endmodule 
