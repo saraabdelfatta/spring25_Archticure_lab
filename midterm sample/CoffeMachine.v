@@ -7,16 +7,16 @@
 //anode and ssd_out are for the FBGA
 module CoffeMachine(input clk,reset,en, output[3:0] ledState, output reg [3:0]  Anode, output reg [6:0] ssd_out);
     //important wire for the clock divider
-wire dividedclk;
+    wire dividedclk;  
 
     //first:: intillize the clock divider 
-clockDivider #(50000000)div(clk,reset,en, dividedclk); 
+    clockDivider #(50000000)div(clk,reset,en, dividedclk); 
 
     //the current_state that the the pointer refare to 
-reg [1:0] current_state;
+    reg [1:0] current_state; 
 
     // the next step the pointer should going to 
-reg [1:0] next_state;
+    reg [1:0] next_state; 
 
     //becouse I have 4 states so I have 4 parameters
     //we assign for each states a number as we map for each state a number
@@ -29,6 +29,7 @@ reg [1:0] next_state;
     parameter [1:0] Clean = 2'b11; //4sec
 
       //refare to the input and it is for FSM and its 4 bit becouse we have 4 parameter 
+      //instead of num in the orginal experments
       reg [3:0] counter=0;
     
         //FBGA
