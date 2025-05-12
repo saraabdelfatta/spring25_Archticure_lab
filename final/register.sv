@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-
+//multibluxer 
 module mux2x1(input a, b, sel, output c);
 assign c = ((a & ~sel) | (b & sel));
 endmodule
