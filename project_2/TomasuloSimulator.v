@@ -4,16 +4,16 @@ module TomasuloSimulator(
 );
 
     // Global parameters
-    parameter NUM_REGS = 8;
-    parameter NUM_RS = 8;  // Total reservation stations
+   // parameter NUM_REGS = 8;
+   // parameter NUM_RS = 8;  // Total reservation stations
     parameter MEM_SIZE = 65536;  // 16-bit address space
     
     // Register file
-    reg [15:0] registers [0:NUM_REGS-1];
-    reg [4:0] reg_status [0:NUM_REGS-1];  // Which RS is writing to each register
+    reg [15:0] registers [0:7];
+    reg [4:0] reg_status [0:7];  // Which RS is writing to each register
     
     // Memory
-    reg [15:0] memory [0:MEM_SIZE-1];
+    reg [15:0] memory [0:65535];
     
     // Reservation stations
     typedef struct packed {
@@ -27,7 +27,7 @@ module TomasuloSimulator(
         bit [7:0] cycles_left;
     } reservation_station;
     
-    reservation_station rs [0:NUM_RS-1];
+    reservation_station rs [0:7];
     
     // Instruction queue
     reg [31:0] instruction_queue [0:15];  // Up to 16 instructions
@@ -60,14 +60,14 @@ module TomasuloSimulator(
             mispredictions = 0;
             
             // Clear registers
-            for (integer i = 0; i < NUM_REGS; i = i + 1) begin
+            for (integer i = 0; i < 8; i = i + 1) begin
                 registers[i] = 0;
                 reg_status[i] = 0;
             end
             registers[0] = 0;  // R0 always zero
             
             // Clear reservation stations
-            for (integer i = 0; i < NUM_RS; i = i + 1) begin
+            for (integer i = 0; i < 8; i = i + 1) begin
                 rs[i].busy = 0;
             end
             
